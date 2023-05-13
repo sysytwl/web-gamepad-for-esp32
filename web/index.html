@@ -133,7 +133,7 @@
     }
       
     function sendButtonInput(output) {
-        var data = output.x + "," + output.y;
+        var data = `${output.x}` + "," + `${output.y}`;
         websocketCarInput.send(data);
     }
     
