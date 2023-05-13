@@ -70,8 +70,8 @@ const char* htmlHomePage PROGMEM = R"HTMLHOMEPAGE(
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.save();
             let pos = getXY(posx - POS_X - BIG_CIRCUIT_R, posy - POS_Y - BIG_CIRCUIT_R);
-            output.x = parseInt(pos.x / BIG_CIRCUIT_R * 255);
-            output.y = parseInt(pos.y / BIG_CIRCUIT_R * 255);
+            output.x = parseInt(pos.x / BIG_CIRCUIT_R * 180);
+            output.y = parseInt(pos.y / BIG_CIRCUIT_R * 180);
             sendButtonInput(output);
             $('#xvalue').text(output.x+","+output.y);
 
@@ -162,6 +162,8 @@ const char* htmlHomePage PROGMEM = R"HTMLHOMEPAGE(
 
 MX1508 motorA(16, 17, 0, 1);
 MX1508 motorB(18, 19, 2, 3);
+int left;
+int right;
 
 void handleRoot(AsyncWebServerRequest *request) {
   request->send_P(200, "text/html", htmlHomePage);
@@ -175,9 +177,13 @@ void onCarInputWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *clie
   switch (type) {
     case WS_EVT_CONNECT:
       Serial.printf("WebSocket client #%u connected from %s\n", client->id(), client->remoteIP().toString().c_str());
+      motorA.motorBrake();
+      motorB.motorBrake();
       break;
     case WS_EVT_DISCONNECT:
       Serial.printf("WebSocket client #%u disconnected\n", client->id());
+      motorA.motorStop();
+      motorB.motorStop();
       break;
     case WS_EVT_DATA:
       AwsFrameInfo *info;
@@ -189,8 +195,27 @@ void onCarInputWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *clie
         std::string x, y;
         std::getline(ss, x, ',');
         std::getline(ss, y, ',');
-        Serial.printf("x:{%s} y:{%s}\n", x.c_str(), y.c_str()); 
-        //int valueInt = atoi(value.c_str());    
+
+        left = atoi(x.c_str()) + atoi(y.c_str());
+        right = atoi(x.c_str()) - atoi(y.c_str());
+
+        Serial.printf("L:{%d} R:{%d}\n", left, right); 
+
+        if (left > 0) {
+          motorA.motorGo(left);
+        } else if (left < 0) {
+          motorA.motorRev(-left);
+        } else {
+          motorA.motorBrake();
+        }
+
+        if (right > 0) {
+          motorB.motorGo(right);
+        } else if (right < 0) {
+          motorB.motorRev(-right);
+        } else {
+          motorB.motorBrake();
+        }
 
 
 /*
@@ -203,6 +228,9 @@ void onCarInputWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *clie
           else
             client->binary("I got your binary message");
 */
+      } else {
+        motorA.motorBrake();
+        motorB.motorBrake();
       }
       break;
     case WS_EVT_PONG:
@@ -248,7 +276,6 @@ void setup(void) {
   Serial.println("HTTP server started");
 }
 
-void loop() 
-{
-  wsCarInput.cleanupClients(); 
+void loop(){
+  wsCarInput.cleanupClients();
 }
