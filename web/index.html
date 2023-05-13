@@ -54,8 +54,8 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.save();
             let pos = getXY(posx - POS_X - BIG_CIRCUIT_R, posy - POS_Y - BIG_CIRCUIT_R);
-            output.x = parseInt(pos.x / BIG_CIRCUIT_R * 255);
-            output.y = parseInt(pos.y / BIG_CIRCUIT_R * 255);
+            output.x = parseInt(pos.x / BIG_CIRCUIT_R * 180);
+            output.y = parseInt(pos.y / BIG_CIRCUIT_R * 180);
             sendButtonInput(output);
             $('#xvalue').text(output.x+","+output.y);
 
