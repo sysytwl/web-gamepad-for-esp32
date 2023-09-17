@@ -1,4 +1,4 @@
-# UoBRobotics_sumo_robots V3
+# UoBRobotics_sumo_robots V3.1
 
 ## Device:
 * ESP32
