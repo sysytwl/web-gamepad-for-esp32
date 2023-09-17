@@ -1,10 +1,16 @@
 const char* htmlHomePage PROGMEM = R"HTMLHOMEPAGE(
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>gamepad</title>
+    <style>
+		canvas{
+			display: block;
+			margin: 8% auto;
+			border:1px solid red;
+		}
+	</style>
 </head>
 <body>
 <canvas id="canvas" width="600" height="600" style="border: 1px solid #888"></canvas>
@@ -142,6 +148,5 @@ const char* htmlHomePage PROGMEM = R"HTMLHOMEPAGE(
     window.onload = initCarInputWebSocket;
 </script>
 </html>
-
 
 )HTMLHOMEPAGE";
