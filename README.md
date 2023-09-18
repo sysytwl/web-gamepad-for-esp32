@@ -1,4 +1,4 @@
-# UoBRobotics_sumo_robots V3.1
+# UoBRobotics_sumo_robots V3.1.10
 
 ## Device:
 * ESP32
@@ -22,6 +22,9 @@
 * <del>https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/storage/spiffs.html
 
 ## TODO:
-- [ ] signal feedback e.g. wifi db ...
-- [ ] make the webpage look better 
+- [ ] UDP version
 - [ ] support for gamepad
+- [ ] signal feedback e.g. wifi db ...
+- [*] make the webpage look better
+- [*] more channels
+
