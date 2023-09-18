@@ -5,44 +5,42 @@
     <title>wifi gamepad</title>
     <style>
 		canvas{
-			display: block;
-			margin: auto auto auto 1%;
-            display: inline-block;
+			margin: auto 10% auto 1%;
+      display: inline-block;
 		}
-        #mainTable {
-            margin: auto 1% auto auto;
-            display: inline-block;
-        }
-        .arrows {
-            font-size:70px;
-
-            color:rgb(9, 255, 0);
-        }
-        td.button {
-            width: 90px;
-            height: 90px;
-            background-color:black;
-            box-shadow: 3px 3px #3b446e;
-        }
-        td.button:active {
-            transform: translate(3px, 3px);
-            box-shadow: none; 
-        }
-        .slider {
-            -webkit-appearance: none;
-            width: 100%;
-            height: 25px;
-            border-radius: 5px;
-            background: #000000;
-            outline: none;
-            opacity: 0.7;
-            -webkit-transition: .2s;
-            transition: opacity .2s;
-        }
+    #mainTable {
+        margin: auto 1% auto 10%;
+        display: inline-block;
+    }
+    .arrows {
+        font-size:30px;
+        color:rgb(9, 255, 0);
+    }
+    td.button {
+        width: 72px;
+        height: 72px;
+        background-color:black;
+        box-shadow: 3px 3px #3b446e;
+    }
+    td.button:active {
+        transform: translate(3px, 3px);
+        box-shadow: none; 
+    }
+    .slider {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 25px;
+        background: #000000;
+        outline: none;
+        opacity: 0.7;
+        -webkit-transition: .2s;
+        transition: opacity .2s;
+    }
 	</style>
 </head>
 <body align="center">
-<canvas id="canvas" width="600" height="600" style="border: 1px solid #888"></canvas>
+<canvas id="canvas" width="300" height="300" style="border: 1px solid #888"></canvas>
+
 <table id="mainTable" CELLSPACING=20>
     <tr>
         <td></td>
@@ -80,7 +78,7 @@
        <div class="slidecontainer"><input type="range" min="0" max="255" value="128" class="slider" oninput='sendButtonInput(undefined,undefined,undefined,undefined,value)'></div>
       </td>
     </tr>
-    <tr>
+<!--    <tr>
       <td style="text-align:left;font-size:30px"><b>CH2:</b></td>
       <td colspan=2>
        <div class="slidecontainer"><input type="range" min="0" max="255" value="128" class="slider" oninput='sendButtonInput(undefined,undefined,undefined,undefined,undefined,value)'></div>
@@ -91,8 +89,9 @@
         <td colspan=2>
          <div class="slidecontainer"><input type="range" min="0" max="255" value="128" class="slider" oninput='sendButtonInput(undefined,undefined,undefined,undefined,undefined,value)'></div>
         </td>
-    </tr>
-
+    </tr> 
+-->
+<!--
     <tr>
         <td class="button" ontouchend='sendButtonInput(undefined,undefined,undefined,undefined,undefined,undefined,undefined,prevValues.ch4 - 5)'
             onclick='sendButtonInput(undefined,undefined,undefined,undefined,undefined,undefined,undefined,prevValues.ch4 + 5)'>
@@ -104,35 +103,33 @@
           <span class="arrows">&#8680;</span>
         </td>
     </tr>
+-->
   </table>
+  <!--<sapn id="xvalue"></sapn>-->
 </body>
 
-<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
 <script src='jquery.min.js'></script>
 <script type="application/javascript">
     function gamepad() {
         let mousedown = false;
-        let texturl = document.getElementById('url');
+        //let texturl = document.getElementById('url');
         let mycanvas = document.getElementById('canvas');
         let ctx = mycanvas.getContext('2d');
-
-        let POS_X = 100;
-        let POS_Y = 100;
-        let SAMLL_CIRCUIT_R = 50;
-        let BIG_CIRCUIT_R = 200;
+        let SMALL_R = 20;
+        let BIG_R = 128;
+        let Offset_ = 150;
         let output = {};
 
         function init() {
-            joystickdraw(BIG_CIRCUIT_R + POS_X, BIG_CIRCUIT_R + POS_Y);
+            joystickdraw(Offset_, Offset_);
         }
 
         function getXY(x, y) {
-
             let mouse2centerlength = Math.sqrt(x * x + y * y);
             let newx = x;
             let newy = y;
-            if (mouse2centerlength > BIG_CIRCUIT_R) {
-                let proportion = mouse2centerlength / BIG_CIRCUIT_R;
+            if (mouse2centerlength > BIG_R) {
+                let proportion = mouse2centerlength / BIG_R;
                 newx = x / proportion;
                 newy = y / proportion;
             }
@@ -142,17 +139,17 @@
         function joystickdraw(posx, posy) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.save();
-            let pos = getXY(posx - POS_X - BIG_CIRCUIT_R, posy - POS_Y - BIG_CIRCUIT_R);
-            output.x = parseInt(pos.x / BIG_CIRCUIT_R * 180);
-            output.y = parseInt(pos.y / BIG_CIRCUIT_R * 180);
-            sendButtonInput(output.x, output.y);
-            $('#xvalue').text(output.x+","+output.y);
-
-            ctx.translate(pos.x + POS_X + BIG_CIRCUIT_R - SAMLL_CIRCUIT_R, pos.y + POS_Y + BIG_CIRCUIT_R - SAMLL_CIRCUIT_R);
+            let pos = getXY(posx - Offset_, posy - Offset_);
+            output.x = parseInt(pos.x);
+            output.y = parseInt(pos.y);
+            sendButtonInput(output.x + 128, output.y + 128);
+            //$('#xvalue').text(output.x+","+output.y);
+            
+            ctx.translate(pos.x - SMALL_R + Offset_, pos.y - SMALL_R + Offset_);
             ctx.beginPath();
-            ctx.arc(SAMLL_CIRCUIT_R, SAMLL_CIRCUIT_R, SAMLL_CIRCUIT_R, 0, 2 * Math.PI);
-            ctx.lineWidth = 10;
-            ctx.fillStyle = 'black';
+            ctx.arc(SMALL_R, SMALL_R, SMALL_R, 0, 2 * Math.PI);
+            ctx.lineWidth = 5;
+            ctx.fillStyle = 'Green';
             ctx.fill();
             ctx.stroke();
             ctx.restore();
@@ -176,12 +173,20 @@
 
         function touchstart_event(e) {
             mousedown = true;
-            joystickdraw(e.touches[0].clientX, e.touches[0].clientY)
+            const canvas = document.getElementById('canvas');
+            const canvasRect = canvas.getBoundingClientRect();
+            const canvasX = e.touches[0].clientX - canvasRect.left;
+            const canvasY = e.touches[0].clientY - canvasRect.top;
+            joystickdraw(canvasX, canvasY);
         }
 
         function touching_event(e) {
             if (mousedown) {
-                joystickdraw(e.touches[0].clientX, e.touches[0].clientY)
+              const canvas = document.getElementById('canvas');
+              const canvasRect = canvas.getBoundingClientRect();
+              const canvasX = e.touches[0].clientX - canvasRect.left;
+              const canvasY = e.touches[0].clientY - canvasRect.top;
+              joystickdraw(canvasX, canvasY);
             }
         }
 
@@ -200,54 +205,75 @@
 
         init();
     }
-    
-    var webSocketCarInputUrl = "ws:\/\/" + window.location.hostname + "/CarInput";
+    //gamepad();
     //$("#url").attr("value",webSocketCarInputUrl);
     //var btnconnect = document.getElementById('connect');
     //var btndisconnect = document.getElementById('disconnect');
-    var prevValues = {x: 0,y: 0,a: 128,b: 128,ch1: 128,ch2: 128,ch3: 128,ch4: 128,};
+var webSocketCarInputUrl = "ws:\/\/" + window.location.hostname + "/CarInput";
 
-    function initCarInputWebSocket() {
-        websocketCarInput = new WebSocket(webSocketCarInputUrl);
+function initCarInputWebSocket() {
+    websocketCarInput = new WebSocket(webSocketCarInputUrl);
+    websocketCarInput.onopen = function(event){gamepad();};
+    websocketCarInput.onclose = function(event){alert("Disconnect"); setTimeout(initCarInputWebSocket, 1);};
+    websocketCarInput.onmessage = function(event){};        
+}
 
-        websocketCarInput.onopen = function(event){
-          gamepad();
-        };
-        websocketCarInput.onclose   = function(event){
-            alert("Disconnect");
-            setTimeout(initCarInputWebSocket, 1000);
-        };
-        websocketCarInput.onmessage = function(event){
+// Initialize the previous values as binary data
+const prevValues = {
+  x: new Uint8Array([0]),
+  y: new Uint8Array([0]),
+  a: new Uint8Array([128]),
+  b: new Uint8Array([128]),
+  ch1: new Uint8Array([128]),
+  ch2: new Uint8Array([128]),
+  ch3: new Uint8Array([128]),
+  ch4: new Uint8Array([128]),
+};
 
-        };        
-    }
-      
-    function sendButtonInput(x = undefined, y = undefined, a = undefined, b = undefined, ch1 = undefined, ch2 = undefined, ch3 = undefined, ch4 = undefined) {
-        let data = {
-            x: x !== undefined ? x : prevValues.x,
-            y: y !== undefined ? y : prevValues.y,
-            a: a !== undefined ? a : prevValues.a,
-            b: b !== undefined ? b : prevValues.b,
-            ch1: ch1 !== undefined ? ch1 : prevValues.ch1,
-            ch2: ch2 !== undefined ? ch2 : prevValues.ch2,
-            ch3: ch3 !== undefined ? ch3 : prevValues.ch3,
-            ch4: ch4 !== undefined ? ch4 : prevValues.ch4,
-        };
-        prevValues = data;
-        websocketCarInput.send(data);
-    }
+function sendButtonInput(x = undefined, y = undefined, a = undefined, b = undefined, ch1 = undefined, ch2 = undefined, ch3 = undefined, ch4 = undefined) {
+  // Create binary data for each input, or use the previous value if not provided
+  const data = {
+    x: x !== undefined ? new Uint8Array([x]) : prevValues.x,
+    y: y !== undefined ? new Uint8Array([y]) : prevValues.y,
+    a: a !== undefined ? new Uint8Array([a]) : prevValues.a,
+    b: b !== undefined ? new Uint8Array([b]) : prevValues.b,
+    ch1: ch1 !== undefined ? new Uint8Array([ch1]) : prevValues.ch1,
+    //ch2: ch2 !== undefined ? new Uint8Array([ch2]) : prevValues.ch2,
+    //ch3: ch3 !== undefined ? new Uint8Array([ch3]) : prevValues.ch3,
+    //ch4: ch4 !== undefined ? new Uint8Array([ch4]) : prevValues.ch4,
+  };
+
+  // Update the previous values
+  Object.assign(prevValues, data);
+
+  // Combine the binary data into a single ArrayBuffer
+  let totalLength = 0;
+  for (const key in data) {
+    totalLength += data[key].byteLength;
+  }
+  const binaryData = new Uint8Array(totalLength);
+  let offset = 0;
+  for (const key in data) {
+    binaryData.set(data[key], offset);
+    offset += data[key].byteLength;
+  }
+
+  // Send the binary data through the WebSocket
+  websocketCarInput.send(binaryData.buffer);
+}
+
     
-    window.onload = initCarInputWebSocket;
-    var mainTable = document.getElementById("mainTable");
+window.onload = initCarInputWebSocket;
+var mainTable = document.getElementById("mainTable");
 
-    function preventDefaultHandler(event) {
-        event.preventDefault();
-    }
+function preventDefaultHandler(event) {
+  event.preventDefault();
+}
 
-    // Add a touchend event listener
-    mainTable.addEventListener("touchend", preventDefaultHandler);
+// Add a touchend event listener
+mainTable.addEventListener("touchend", preventDefaultHandler);
 
-    // Add a click event listener
-    mainTable.addEventListener("click", preventDefaultHandler);
+// Add a click event listener
+mainTable.addEventListener("click", preventDefaultHandler);
 </script>
 </html>
