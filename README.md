@@ -22,7 +22,6 @@
 * <del>https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/storage/spiffs.html
 
 ## TODO:
-- [ ] UDP version
 - [ ] support for gamepad
 - [ ] signal feedback e.g. wifi db ...
 - [x] make the webpage look better
