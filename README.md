@@ -22,7 +22,7 @@
 * <del>https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/storage/spiffs.html
 
 ## TODO:
-- [ ] support for gamepad
+- [x] support for gamepad
 - [ ] voltage feedback
 - [ ] signal feedback e.g. wifi db ...
 - [x] make the webpage look better
