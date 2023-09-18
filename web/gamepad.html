@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gamepad Input Demo</title>
+    <!-- Add your CSS styles here -->
+</head>
+<body>
+    <!-- Create elements to display gamepad input data -->
+    <h1>Gamepad Input Data</h1>
+    <div id="gamepadData">
+        <p><strong>Axis X:</strong> <span id="axisX">0</span></p>
+        <p><strong>Axis Y:</strong> <span id="axisY">0</span></p>
+        <p><strong>Button A:</strong> <span id="buttonA">Released</span></p>
+        <p><strong>Button B:</strong> <span id="buttonB">Released</span></p>
+        <!-- Add more elements for additional gamepad data as needed -->
+    </div>
+
+    <!-- Add your canvas-based joystick or control elements here -->
+    <!-- You can reuse the canvas and joystick code you provided -->
+    
+    <!-- Include your JavaScript code for handling gamepad input and updating the display -->
+    <script src='jquery.min.js'></script>
+    <script>
+// Function to update the display with gamepad input data and send it
+function updateGamepadData() {
+    const gamepad = navigator.getGamepads()[0]; // Get the first connected gamepad
+    if (gamepad) {
+        // Update the display with gamepad data
+        document.getElementById('axisX').textContent = gamepad.axes[0].toFixed(2);
+        document.getElementById('axisY').textContent = gamepad.axes[1].toFixed(2);
+        document.getElementById('buttonA').textContent = gamepad.buttons[0].pressed ? 'Pressed' : 'Released';
+        document.getElementById('buttonB').textContent = gamepad.buttons[1].pressed ? 'Pressed' : 'Released';
+        // Add more code to update other gamepad data as needed
+        
+        // Send gamepad data to the server using sendButtonInput
+        sendButtonInput(
+            Math.round((gamepad.axes[0] + 1) * 128), // Normalize axis value to [0, 255]
+            Math.round((gamepad.axes[1] + 1) * 128), // Normalize axis value to [0, 255]
+            gamepad.buttons[0].pressed ? 255 : 128, // Button A state
+            gamepad.buttons[1].pressed ? 255 : 128, // Button B state
+            // Add more gamepad data as needed
+        );
+    }
+
+    // Repeat the function call with a 50ms delay
+    setTimeout(function() {
+        requestAnimationFrame(updateGamepadData);
+    }, 50);
+}
+
+var webSocketCarInputUrl = "ws:\/\/" + window.location.hostname + "/CarInput";
+function initCarInputWebSocket() {
+    websocketCarInput = new WebSocket(webSocketCarInputUrl);
+    websocketCarInput.onopen = function(event){updateGamepadData();};
+    websocketCarInput.onclose = function(event){alert("Disconnect"); setTimeout(initCarInputWebSocket, 1);};
+    websocketCarInput.onmessage = function(event){};        
+}
+const prevValues = {
+  x: new Uint8Array([0]),
+  y: new Uint8Array([0]),
+  a: new Uint8Array([128]),
+  b: new Uint8Array([128]),
+  ch1: new Uint8Array([128]),
+  ch2: new Uint8Array([128]),
+  ch3: new Uint8Array([128]),
+  ch4: new Uint8Array([128]),
+};
+function sendButtonInput(x = undefined, y = undefined, a = undefined, b = undefined, ch1 = undefined, ch2 = undefined, ch3 = undefined, ch4 = undefined) {
+  // Create binary data for each input, or use the previous value if not provided
+  const data = {
+    x: x !== undefined ? new Uint8Array([x]) : prevValues.x,
+    y: y !== undefined ? new Uint8Array([y]) : prevValues.y,
+    a: a !== undefined ? new Uint8Array([a]) : prevValues.a,
+    b: b !== undefined ? new Uint8Array([b]) : prevValues.b,
+    ch1: ch1 !== undefined ? new Uint8Array([ch1]) : prevValues.ch1,
+    //ch2: ch2 !== undefined ? new Uint8Array([ch2]) : prevValues.ch2,
+    //ch3: ch3 !== undefined ? new Uint8Array([ch3]) : prevValues.ch3,
+    //ch4: ch4 !== undefined ? new Uint8Array([ch4]) : prevValues.ch4,
+  };
+
+  // Update the previous values
+  Object.assign(prevValues, data);
+
+  // Combine the binary data into a single ArrayBuffer
+  let totalLength = 0;
+  for (const key in data) {
+    totalLength += data[key].byteLength;
+  }
+  const binaryData = new Uint8Array(totalLength);
+  let offset = 0;
+  for (const key in data) {
+    binaryData.set(data[key], offset);
+    offset += data[key].byteLength;
+  }
+
+  // Send the binary data through the WebSocket
+  websocketCarInput.send(binaryData.buffer);
+}   
+window.onload = initCarInputWebSocket;
+    </script>
+</body>
+</html>
