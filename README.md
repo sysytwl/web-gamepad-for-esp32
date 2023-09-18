@@ -1,4 +1,4 @@
-# UoBRobotics_sumo_robots V3.1
+# UoBRobotics_sumo_robots V4 pre
 
 ## Device:
 * ESP32
@@ -23,5 +23,5 @@
 
 ## TODO:
 - [ ] signal feedback e.g. wifi db ...
-- [ ] make the webpage look better 
 - [ ] support for gamepad
+- [ ] UDP
