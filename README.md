@@ -23,6 +23,7 @@
 
 ## TODO:
 - [ ] support for gamepad
+- [ ] voltage feedback
 - [ ] signal feedback e.g. wifi db ...
 - [x] make the webpage look better
 - [x] more channels
