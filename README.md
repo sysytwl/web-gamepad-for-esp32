@@ -25,6 +25,6 @@
 - [ ] UDP version
 - [ ] support for gamepad
 - [ ] signal feedback e.g. wifi db ...
-- [*] make the webpage look better
-- [*] more channels
+- [x] make the webpage look better
+- [x] more channels
 
