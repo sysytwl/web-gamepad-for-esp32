@@ -1,6 +1,3 @@
-#ifndef ESP32MX1508_h
-#define ESP32MX1508_h
-
 #include "Arduino.h"
 
 class MX1508 {
@@ -25,5 +22,3 @@ class MX1508 {
 	  //long _pwmVal;           // PWM Value (speed)
     long _maxpwm;           // Max PWM Value of the Motor
 };
-
-#endif
