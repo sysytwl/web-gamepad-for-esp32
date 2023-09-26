@@ -8,7 +8,8 @@
 * Analogue output
 * input:
   * touch screen
-  * mouse 
+  * mouse
+  * gamepad
 
 ## Library:
 * ESPAsyncWebServer @1.2.6
