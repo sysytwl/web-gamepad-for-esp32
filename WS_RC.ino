@@ -32,9 +32,9 @@ void onCarInputWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *clie
 
         Serial.printf("Received x: %d, y: %d, a: %d, b: %d, ch1: %d, ch2: %d, ch3: %d, ch4: %d\n", x, y, a, b, ch1, ch2, ch3, ch4);
       
-        int left = x + y;
-        int right = x - y;
-        //Serial.printf("L:{%d} R:{%d}\n", left, right); 
+        int left = y + x - 256;
+        int right = y - x;
+        Serial.printf("L:{%d} R:{%d}\n", left, right); 
         motorA.motorGo(left);
         motorB.motorGo(right);
       } else {
@@ -94,6 +94,9 @@ void setup(void) {
 
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
     request->send_P(200, "text/html", htmlHomePage);
+  });
+  server.on("/gamepad", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send_P(200, "text/html", gamepad);
   });
   server.on("/jquery.min.js", HTTP_GET, [](AsyncWebServerRequest *request) {
     request->send_P(200, "text/html", _js);

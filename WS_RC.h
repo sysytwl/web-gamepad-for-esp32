@@ -13,8 +13,8 @@
 AsyncWebServer server(80);
 AsyncWebSocket wsCarInput("/CarInput");
 
-MX1508 motorA(16, 17, 0, 1);
-MX1508 motorB(18, 19, 2, 3);
+MX1508 motorB(25, 26, 0, 1);
+MX1508 motorA(18, 19, 2, 3);
 int left;
 int right;
 

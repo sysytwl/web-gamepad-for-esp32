@@ -111,101 +111,107 @@ const char* htmlHomePage PROGMEM = R"HTMLHOMEPAGE(
 
 <script src='jquery.min.js'></script>
 <script type="application/javascript">
-    function gamepad() {
-        let mousedown = false;
-        //let texturl = document.getElementById('url');
-        let mycanvas = document.getElementById('canvas');
-        let ctx = mycanvas.getContext('2d');
-        let SMALL_R = 20;
-        let BIG_R = 128;
-        let Offset_ = 150;
-        let output = {};
+function gamepad() {
+  let mousedown = false;
+  let mycanvas = document.getElementById('canvas');
+  let ctx = mycanvas.getContext('2d');
+  let SMALL_R = 20;
+  let BIG_R = 128;
+  let Offset_ = 150;
+  let output = {x: 128, y: 128};  // Initialize with neutral positions
 
-        function init() {
-            joystickdraw(Offset_, Offset_);
-        }
+  function init() {
+    joystickdraw(Offset_, Offset_);
+  }
 
-        function getXY(x, y) {
-            let mouse2centerlength = Math.sqrt(x * x + y * y);
-            let newx = x;
-            let newy = y;
-            if (mouse2centerlength > BIG_R) {
-                let proportion = mouse2centerlength / BIG_R;
-                newx = x / proportion;
-                newy = y / proportion;
-            }
-            return {x: newx, y: newy};
-        }
-
-        function joystickdraw(posx, posy) {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.save();
-            let pos = getXY(posx - Offset_, posy - Offset_);
-            output.x = parseInt(pos.x);
-            output.y = parseInt(pos.y);
-            sendButtonInput(output.x + 128, output.y + 128);
-            //$('#xvalue').text(output.x+","+output.y);
-            
-            ctx.translate(pos.x - SMALL_R + Offset_, pos.y - SMALL_R + Offset_);
-            ctx.beginPath();
-            ctx.arc(SMALL_R, SMALL_R, SMALL_R, 0, 2 * Math.PI);
-            ctx.lineWidth = 5;
-            ctx.fillStyle = 'Green';
-            ctx.fill();
-            ctx.stroke();
-            ctx.restore();
-        }
-
-        function dragstart_event(e) {
-            mousedown = true;
-            joystickdraw(e.offsetX, e.offsetY)
-        }
-
-        function dragging_event(e) {
-            if (mousedown) {
-                joystickdraw(e.offsetX, e.offsetY)
-            }
-        }
-
-        function dragstop_event() {
-            mousedown = false;
-            init();
-        }
-
-        function touchstart_event(e) {
-            mousedown = true;
-            const canvas = document.getElementById('canvas');
-            const canvasRect = canvas.getBoundingClientRect();
-            const canvasX = e.touches[0].clientX - canvasRect.left;
-            const canvasY = e.touches[0].clientY - canvasRect.top;
-            joystickdraw(canvasX, canvasY);
-        }
-
-        function touching_event(e) {
-            if (mousedown) {
-              const canvas = document.getElementById('canvas');
-              const canvasRect = canvas.getBoundingClientRect();
-              const canvasX = e.touches[0].clientX - canvasRect.left;
-              const canvasY = e.touches[0].clientY - canvasRect.top;
-              joystickdraw(canvasX, canvasY);
-            }
-        }
-
-        function touchstop_event() {
-            mousedown = false;
-            init();
-        }
-
-        mycanvas.onmousedown = dragstart_event;
-        mycanvas.onmousemove = dragging_event;
-        mycanvas.onmouseup = dragstop_event;
-
-        mycanvas.ontouchstart = touchstart_event;
-        mycanvas.ontouchmove = touching_event;
-        mycanvas.ontouchend = touchstop_event;
-
-        init();
+  function getXY(x, y) {
+    let mouse2centerlength = Math.sqrt(x * x + y * y);
+    let newx = x;
+    let newy = y;
+    if (mouse2centerlength > BIG_R) {
+      let proportion = mouse2centerlength / BIG_R;
+      newx = x / proportion;
+      newy = y / proportion;
     }
+    return {x: newx, y: newy};
+    }
+
+  function joystickdraw(posx, posy) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.save();
+    let pos = getXY(posx - Offset_, posy - Offset_);
+    output.x = parseInt(pos.x);
+    output.y = parseInt(pos.y);
+    //sendButtonInput(output.x + 128, output.y + 128);
+    //$('#xvalue').text(output.x+","+output.y);
+            
+    ctx.translate(pos.x - SMALL_R + Offset_, pos.y - SMALL_R + Offset_);
+    ctx.beginPath();
+    ctx.arc(SMALL_R, SMALL_R, SMALL_R, 0, 2 * Math.PI);
+    ctx.lineWidth = 5;
+    ctx.fillStyle = 'Green';
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function dragstart_event(e) {
+    mousedown = true;
+    joystickdraw(e.offsetX, e.offsetY)
+  }
+
+  function dragging_event(e) {
+    if (mousedown) {
+      joystickdraw(e.offsetX, e.offsetY)
+    }
+  }
+
+  function dragstop_event() {
+    mousedown = false;
+    init();
+  }
+
+  function touchstart_event(e) {
+    mousedown = true;
+    const canvas = document.getElementById('canvas');
+    const canvasRect = canvas.getBoundingClientRect();
+    const canvasX = e.touches[0].clientX - canvasRect.left;
+    const canvasY = e.touches[0].clientY - canvasRect.top;
+    joystickdraw(canvasX, canvasY);
+  }
+
+  function touching_event(e) {
+    if (mousedown) {
+      const canvas = document.getElementById('canvas');
+      const canvasRect = canvas.getBoundingClientRect();
+      const canvasX = e.touches[0].clientX - canvasRect.left;
+      const canvasY = e.touches[0].clientY - canvasRect.top;
+      joystickdraw(canvasX, canvasY);
+    }
+  }
+
+  function touchstop_event() {
+    mousedown = false;
+    init();
+  }
+
+  mycanvas.onmousedown = dragstart_event;
+  mycanvas.onmousemove = dragging_event;
+  mycanvas.onmouseup = dragstop_event;
+
+  mycanvas.ontouchstart = touchstart_event;
+  mycanvas.ontouchmove = touching_event;
+  mycanvas.ontouchend = touchstop_event;
+
+  function continuousDataSend() {
+      sendButtonInput(output.x + 128, output.y + 128);
+  }
+
+  setInterval(continuousDataSend, 100);
+
+  init();
+}
+
     //gamepad();
     //$("#url").attr("value",webSocketCarInputUrl);
     //var btnconnect = document.getElementById('connect');
@@ -297,6 +303,7 @@ const char* gamepad PROGMEM = R"GAMEPAD(
     <!-- Create elements to display gamepad input data -->
     <h1>Gamepad Input Data</h1>
     <div id="gamepadData">
+        <p><strong>Selected Gamepad:</strong> <span id="selectedGamepad">None</span></p>
         <p><strong>Axis X:</strong> <span id="axisX">0</span></p>
         <p><strong>Axis Y:</strong> <span id="axisY">0</span></p>
         <p><strong>Button A:</strong> <span id="buttonA">Released</span></p>
@@ -304,88 +311,133 @@ const char* gamepad PROGMEM = R"GAMEPAD(
         <!-- Add more elements for additional gamepad data as needed -->
     </div>
 
-    <!-- Add your canvas-based joystick or control elements here -->
-    <!-- You can reuse the canvas and joystick code you provided -->
-    
+    <!-- Add a dropdown to manually select the gamepad -->
+    <label for="gamepadSelect">Select Gamepad:</label>
+    <select id="gamepadSelect">
+        <option value="-1">None</option>
+    </select>
+
     <!-- Include your JavaScript code for handling gamepad input and updating the display -->
-    <script src='jquery.min.js'></script>
+    <script src="jquery.min.js"></script>
     <script>
-// Function to update the display with gamepad input data and send it
-function updateGamepadData() {
-    const gamepad = navigator.getGamepads()[0]; // Get the first connected gamepad
-    if (gamepad) {
-        // Update the display with gamepad data
-        document.getElementById('axisX').textContent = gamepad.axes[0].toFixed(2);
-        document.getElementById('axisY').textContent = gamepad.axes[1].toFixed(2);
-        document.getElementById('buttonA').textContent = gamepad.buttons[0].pressed ? 'Pressed' : 'Released';
-        document.getElementById('buttonB').textContent = gamepad.buttons[1].pressed ? 'Pressed' : 'Released';
-        // Add more code to update other gamepad data as needed
-        
-        // Send gamepad data to the server using sendButtonInput
-        sendButtonInput(
-            Math.round((gamepad.axes[0] + 1) * 128), // Normalize axis value to [0, 255]
-            Math.round((gamepad.axes[1] + 1) * 128), // Normalize axis value to [0, 255]
-            gamepad.buttons[0].pressed ? 255 : 128, // Button A state
-            gamepad.buttons[1].pressed ? 255 : 128, // Button B state
-            // Add more gamepad data as needed
-        );
-    }
+        var selectedGamepadIndex = -1; // Initialize with no gamepad selected
+        var gamepadSelect = document.getElementById('gamepadSelect');
+        var gamepadData = document.getElementById('gamepadData');
 
-    // Repeat the function call with a 50ms delay
-    setTimeout(function() {
-        requestAnimationFrame(updateGamepadData);
-    }, 50);
-}
+        // Function to update the gamepad select dropdown
+        function updateGamepadList() {
+            gamepadSelect.innerHTML = ''; // Clear the dropdown
+            var gamepads = navigator.getGamepads();
 
-var webSocketCarInputUrl = "ws:\/\/" + window.location.hostname + "/CarInput";
-function initCarInputWebSocket() {
-    websocketCarInput = new WebSocket(webSocketCarInputUrl);
-    websocketCarInput.onopen = function(event){updateGamepadData();};
-    websocketCarInput.onclose = function(event){alert("Disconnect"); setTimeout(initCarInputWebSocket, 1);};
-    websocketCarInput.onmessage = function(event){};        
-}
-const prevValues = {
-  x: new Uint8Array([0]),
-  y: new Uint8Array([0]),
-  a: new Uint8Array([128]),
-  b: new Uint8Array([128]),
-  ch1: new Uint8Array([128]),
-  ch2: new Uint8Array([128]),
-  ch3: new Uint8Array([128]),
-  ch4: new Uint8Array([128]),
-};
-function sendButtonInput(x = undefined, y = undefined, a = undefined, b = undefined, ch1 = undefined, ch2 = undefined, ch3 = undefined, ch4 = undefined) {
-  // Create binary data for each input, or use the previous value if not provided
-  const data = {
-    x: x !== undefined ? new Uint8Array([x]) : prevValues.x,
-    y: y !== undefined ? new Uint8Array([y]) : prevValues.y,
-    a: a !== undefined ? new Uint8Array([a]) : prevValues.a,
-    b: b !== undefined ? new Uint8Array([b]) : prevValues.b,
-    ch1: ch1 !== undefined ? new Uint8Array([ch1]) : prevValues.ch1,
-    //ch2: ch2 !== undefined ? new Uint8Array([ch2]) : prevValues.ch2,
-    //ch3: ch3 !== undefined ? new Uint8Array([ch3]) : prevValues.ch3,
-    //ch4: ch4 !== undefined ? new Uint8Array([ch4]) : prevValues.ch4,
-  };
+            for (var i = 0; i < gamepads.length; i++) {
+                var gamepad = gamepads[i];
+                if (gamepad) {
+                    var option = document.createElement('option');
+                    option.value = i;
+                    option.text = gamepad.id;
+                    gamepadSelect.appendChild(option);
+                }
+            }
+        }
 
-  // Update the previous values
-  Object.assign(prevValues, data);
+        // Function to handle gamepad selection from the dropdown
+        gamepadSelect.addEventListener('change', function () {
+            selectedGamepadIndex = parseInt(gamepadSelect.value);
+            if (selectedGamepadIndex === -1) {
+                gamepadData.style.display = 'none'; // Hide gamepad data when no gamepad is selected
+            } else {
+                gamepadData.style.display = 'block'; // Show gamepad data when a gamepad is selected
+            }
+        });
 
-  // Combine the binary data into a single ArrayBuffer
-  let totalLength = 0;
-  for (const key in data) {
-    totalLength += data[key].byteLength;
-  }
-  const binaryData = new Uint8Array(totalLength);
-  let offset = 0;
-  for (const key in data) {
-    binaryData.set(data[key], offset);
-    offset += data[key].byteLength;
-  }
+        // Function to update the display with gamepad input data and send it
+        function updateGamepadData() {
+            const gamepads = navigator.getGamepads();
+            const gamepad = gamepads[selectedGamepadIndex]; // Use the selected gamepad
 
-  // Send the binary data through the WebSocket
-  websocketCarInput.send(binaryData.buffer);
-}   
-window.onload = initCarInputWebSocket;
+            if (gamepad) {
+                // Update the display with gamepad data
+                document.getElementById('selectedGamepad').textContent = gamepad.id;
+                document.getElementById('axisX').textContent = gamepad.axes[0].toFixed(2);
+                document.getElementById('axisY').textContent = gamepad.axes[1].toFixed(2);
+                document.getElementById('buttonA').textContent = gamepad.buttons[0].pressed ? 'Pressed' : 'Released';
+                document.getElementById('buttonB').textContent = gamepad.buttons[1].pressed ? 'Pressed' : 'Released';
+                // Add more code to update other gamepad data as needed
+
+                // Send gamepad data to the server using sendButtonInput
+                sendButtonInput(
+                    Math.round((gamepad.axes[0] + 1) * 128), // Normalize axis value to [0, 255]
+                    Math.round((gamepad.axes[1] + 1) * 128), // Normalize axis value to [0, 255]
+                    gamepad.buttons[0].pressed ? 255 : 128, // Button A state
+                    gamepad.buttons[1].pressed ? 255 : 128, // Button B state
+                    // Add more gamepad data as needed
+                );
+            }
+
+            // Repeat the function call with a 50ms delay
+            setTimeout(function() {
+                requestAnimationFrame(updateGamepadData);
+            }, 50);
+        }
+
+        var webSocketCarInputUrl = "ws:\/\/" + window.location.hostname + "/CarInput";
+        function initCarInputWebSocket() {
+            websocketCarInput = new WebSocket(webSocketCarInputUrl);
+            websocketCarInput.onopen = function(event){
+                updateGamepadList(); // Initial update of the gamepad list
+                updateGamepadData();
+            };
+            websocketCarInput.onclose = function(event){
+                alert("Disconnect");
+                setTimeout(initCarInputWebSocket, 1);
+            };
+            websocketCarInput.onmessage = function(event){};        
+        }
+
+        const prevValues = {
+            x: new Uint8Array([0]),
+            y: new Uint8Array([0]),
+            a: new Uint8Array([128]),
+            b: new Uint8Array([128]),
+            ch1: new Uint8Array([128]),
+            ch2: new Uint8Array([128]),
+            ch3: new Uint8Array([128]),
+            ch4: new Uint8Array([128]),
+        };
+
+        function sendButtonInput(x = undefined, y = undefined, a = undefined, b = undefined, ch1 = undefined, ch2 = undefined, ch3 = undefined, ch4 = undefined) {
+            // Create binary data for each input, or use the previous value if not provided
+            const data = {
+                x: x !== undefined ? new Uint8Array([x]) : prevValues.x,
+                y: y !== undefined ? new Uint8Array([y]) : prevValues.y,
+                a: a !== undefined ? new Uint8Array([a]) : prevValues.a,
+                b: b !== undefined ? new Uint8Array([b]) : prevValues.b,
+                ch1: ch1 !== undefined ? new Uint8Array([ch1]) : prevValues.ch1,
+                //ch2: ch2 !== undefined ? new Uint8Array([ch2]) : prevValues.ch2,
+                //ch3: ch3 !== undefined ? new Uint8Array([ch3]) : prevValues.ch3,
+                //ch4: ch4 !== undefined ? new Uint8Array([ch4]) : prevValues.ch4,
+            };
+
+            // Update the previous values
+            Object.assign(prevValues, data);
+
+            // Combine the binary data into a single ArrayBuffer
+            let totalLength = 0;
+            for (const key in data) {
+                totalLength += data[key].byteLength;
+            }
+            const binaryData = new Uint8Array(totalLength);
+            let offset = 0;
+            for (const key in data) {
+                binaryData.set(data[key], offset);
+                offset += data[key].byteLength;
+            }
+
+            // Send the binary data through the WebSocket
+            websocketCarInput.send(binaryData.buffer);
+        }
+
+        window.onload = initCarInputWebSocket;
     </script>
 </body>
 </html>
