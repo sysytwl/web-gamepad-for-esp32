@@ -21,6 +21,6 @@ int right;
 // ===========================
 // Enter your WiFi credentials
 // ===========================
-const char* host = "esp32_UBRobotics";
-const char* password = "ubrobotics";
-const int channel = 9;
+const char* host = "JackShenYt_Sumo";
+const char* password = "ubrobots1";
+const int channel = 3;

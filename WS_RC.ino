@@ -44,9 +44,13 @@ void onCarInputWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *clie
       break;
     case WS_EVT_PONG:
       Serial.printf("ws[%s][%u] pong[%u]: %s\n", server->url(), client->id(), len, (len)?(char*)data:"");
+      motorA.motorStop();
+      motorB.motorStop();
       break;
     case WS_EVT_ERROR:
       Serial.printf("ws[%s][%u] error(%u): %s\n", server->url(), client->id(), *((uint16_t*)arg), (char*)data);
+      motorA.motorStop();
+      motorB.motorStop();
       break;
     default:
       break;  
@@ -58,7 +62,8 @@ void setup(void) {
   
   // AP name,passwd
   WiFi.softAP(host, password, channel);
-  WiFi.setTxPower(WIFI_POWER_MINUS_1dBm);
+  WiFi.setTxPower(WIFI_POWER_19_5dBm);
+  //WIFI_POWER_MINUS_1dBm
   
   IPAddress IP = WiFi.softAPIP();
   Serial.print("AP IP address: ");

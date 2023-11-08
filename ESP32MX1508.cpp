@@ -6,10 +6,10 @@ MX1508::MX1508( uint8_t pinIN1, uint8_t pinIN2, uint8_t ledCH1, uint8_t ledCH2) 
   _ledCH1 = ledCH1;         // ESP32 LED Channel for PWM to Pin  
   _ledCH2 = ledCH2;         // 0 - 15 are availible by default
   pinMode(_pinIN1, OUTPUT);
-  ledcSetup(_ledCH1, 2500, 8);         // Setup channel at 2500Hz with 8 bit (0-255) resolution
+  ledcSetup(_ledCH1, 500, 8);         // Setup channel at 2500Hz with 8 bit (0-255) resolution
   ledcAttachPin(_pinIN1, _ledCH1);
   pinMode(_pinIN2, OUTPUT);
-  ledcSetup(_ledCH2, 2500, 8);         // Setup channel at 2500Hz with 8 bit (0-255) resolution
+  ledcSetup(_ledCH2, 500, 8);         // Setup channel at 2500Hz with 8 bit (0-255) resolution
   ledcAttachPin(_pinIN2, _ledCH2);
   _maxpwm = 255;                       // Sets a flag on the motor so the object knows the max pwm value
 }
