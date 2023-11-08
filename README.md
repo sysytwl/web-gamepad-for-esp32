@@ -1,4 +1,4 @@
-# UoBRobotics_sumo_robots WebSocket V3.2.1
+# UoBRobotics_sumo_robots WebSocket V3.2.2
 
 ## Device:
 * ESP32
