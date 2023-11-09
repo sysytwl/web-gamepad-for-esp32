@@ -21,4 +21,4 @@
 - [ ] analogue input
 - [x] uint8_t transmission 
 - [ ] support for gamepad
-
+- [ ] https://www.pygame.org/docs/ref/joystick.html
