@@ -235,22 +235,27 @@ function initCarInputWebSocket() {
 
 function debugmode(){
   $('#xvalue').text(global_channel_Values.x + "," + global_channel_Values.y);
-  console.log(global_channel_Values);
+  //console.log(global_channel_Values);
+
+  // Combine the binary data into a single ArrayBuffer
+  const binaryData = new Uint8Array(8);
+  let offset = 0;
+  for (const key in global_channel_Values) {
+    binaryData[offset] = global_channel_Values[key];
+    //binaryData.set(global_channel_Values[key], offset);
+    offset ++;
+  }
+  console.log(binaryData);
 }
 
 function sendButtonInput() {
   // Combine the binary data into a single ArrayBuffer
-  let totalLength = 0;
-  for (const key in global_channel_Values) {
-    totalLength += global_channel_Values[key].byteLength;
-  }
-  const binaryData = new Uint8Array(totalLength);
+  const binaryData = new Uint8Array(8);
   let offset = 0;
   for (const key in global_channel_Values) {
-    binaryData.set(global_channel_Values[key], offset);
-    offset += global_channel_Values[key].byteLength;
+    binaryData[offset] = global_channel_Values[key];
+    offset ++;
   }
-
   // Send the binary data through the WebSocket
   websocketCarInput.send(binaryData.buffer);
 }
