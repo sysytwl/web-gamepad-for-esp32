@@ -1,4 +1,12 @@
-# UoBRobotics_sumo_robots WebSocket V3.2.2
+# UoBRobotics_sumo_robots WebSocket
+
+## V3.2.5 changes:
+- web:
+  - better logic, reduced resource
+  - add debug mode
+  - add rotation function
+- fix the bug: won't stop sometime
+- find the new bug: multi gamepads are not working
 
 ## Device:
 * ESP32
