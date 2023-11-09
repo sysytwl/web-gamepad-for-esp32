@@ -1,5 +1,9 @@
 # UoBRobotics_sumo_robots WebSocket
 
+## V3.2.7 changes:
+- web:
+  - better logic, reduced resource usage 
+
 ## V3.2.6 changes:
 - Web:
   - add full-screen function
@@ -9,7 +13,7 @@
 
 ## V3.2.5 changes:
 - web:
-  - better logic, reduced resource
+  - better logic, reduced resource usage 
   - add debug mode
   - add rotation function
 - fix the bug: won't stop sometime
