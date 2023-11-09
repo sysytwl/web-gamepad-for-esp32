@@ -16,3 +16,7 @@ int right;
 const char* host = "esp32_UBRobotics";
 const char* password = "ubrobotics";
 const int channel = 9;
+
+WiFiUDP Udp; 
+uint8_t data[8];
+unsigned int localPort = 9999;

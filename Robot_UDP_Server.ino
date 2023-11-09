@@ -1,90 +1,39 @@
 #include "Robot_UDP_Server.h"
 
-WiFiUDP Udp; 
 
-char packetBuffer[255];
-
-unsigned int localPort = 9999;
-
-const char *ssid = "SmallReubenWagon";  
-const char *password = "smallWagon";
-
-class simpleMotor{
-  public:
-  int speed, PWMChannelF, PWMChannelB;
-
-  void setup(int _pinForward, int _pinBackward, int _PWMChannelF, int _PWMChannelB){
-    PWMChannelF = _PWMChannelF;
-    PWMChannelB = _PWMChannelB;
-
-    ledcSetup(_PWMChannelF, 60, 10);
-    ledcSetup(_PWMChannelB, 60, 10);
-
-    ledcAttachPin(_pinForward, _PWMChannelF);
-    ledcAttachPin(_pinBackward, _PWMChannelB);
-  }
-
-  void setSpeed(int speed){
-    if (speed < 0){
-      speed*=-1;
-      ledcWrite(PWMChannelF, 0);
-      ledcWrite(PWMChannelB, speed);
-    }
-    else{
-      ledcWrite(PWMChannelB, 0);
-      ledcWrite(PWMChannelF, speed);
-    }
-  }
-};
-
-simpleMotor left;
-simpleMotor right;
 
 void setup() {
   Serial.begin(115200);
+
   WiFi.softAP(ssid, password);
   Udp.begin(localPort);
   delay(200);
   Serial.println(WiFi.softAPIP());
-
-  left.setup(22, 23, 0, 1);
-  right.setup(19, 18, 2, 3);
-  }
+}
 
 void loop() {
   int packetSize = Udp.parsePacket();
   if (packetSize) {
-    int len = Udp.read(packetBuffer, 255);
-    if (len > 0) packetBuffer[len] = 0;
-    Serial.print(String(packetBuffer[0]));
-    Serial.println();
+    int len = Udp.read(data, 8);
+    // Extract binary data into an array of integers
+    int x = data[0];
+    int y = data[1];
+    int a = data[2];
+    int b = data[3];
+    int ch1 = data[4];
+    int ch2 = 0; //data[5];
+    int ch3 = 0; //data[6];
+    int ch4 = 0; //data[7];
+
+    Serial.printf("Received x: %d, y: %d, a: %d, b: %d, ch1: %d, ch2: %d, ch3: %d, ch4: %d", x, y, a, b, ch1, ch2, ch3, ch4);
+      
+    int left = y + x - 256;
+    int right = y - x;
+    Serial.printf("    L:{%d} R:{%d}\n", left, right); 
+    motorA.motorGo(left);
+    motorB.motorGo(right);
+  } else {
+    motorA.motorStop();
+    motorB.motorStop();
   }
-  
-  if (String(packetBuffer[0]) == "w"){
-  left.setSpeed(450);
-  right.setSpeed(450);
-  Serial.println("f");
-  }
-  else if(String(packetBuffer[0]) == "s"){
-  left.setSpeed(-400);
-  right.setSpeed(-400);
-  //Serial.println("b");
-  }
-  else if (String(packetBuffer[0]) == "a"){
-  left.setSpeed(-450);
-  right.setSpeed(450);
-  Serial.println("f");
-  }
-  else if(String(packetBuffer[0]) == "d"){
-  left.setSpeed(450);
-  right.setSpeed(-450);
-  //Serial.println("b");
-  }
-  else if(String(packetBuffer[0]) == "n"){
-    left.setSpeed(0);
-    right.setSpeed(0);
-    Serial.println("s");
-    
-  }
-  delay(50);
 }

@@ -1,4 +1,7 @@
-# UoBRobotics_sumo_robots UDP V4 
+# UoBRobotics_sumo_robots UDP 
+
+## V5:
+- uint8_t transmission
 
 ## Device:
 * ESP32
@@ -16,6 +19,6 @@
 ## TODO:
 - [ ] signal feedback e.g. wifi db ...
 - [ ] analogue input
-- [ ] uint8_t transmission 
+- [x] uint8_t transmission 
 - [ ] support for gamepad
 
