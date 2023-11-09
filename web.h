@@ -3,6 +3,7 @@ const char* htmlHomePage PROGMEM = R"HTMLHOMEPAGE(
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi"/>
     <title>wifi gamepad</title>
     <style>
 		canvas{
@@ -37,80 +38,96 @@ const char* htmlHomePage PROGMEM = R"HTMLHOMEPAGE(
         -webkit-transition: .2s;
         transition: opacity .2s;
     }
+    body{
+      overflow: hidden;
+      position: relative;
+    }
 	</style>
 </head>
 <body align="center">
+
 <canvas id="canvas" width="300" height="300" style="border: 1px solid #888"></canvas>
 
 <table id="mainTable" CELLSPACING=20>
-    <tr>
-        <td></td>
-        <td class="button" ontouchstart='sendButtonInput(undefined, undefined, undefined, 255)' ontouchend='sendButtonInput(undefined, undefined, undefined, 128)' 
-            onmousedown='sendButtonInput(undefined, undefined, undefined, 255)' onmouseup='sendButtonInput(undefined, undefined, undefined, 128)'>
-          <span class="arrows">&#8679;</span>
-        </td>
-        <td></td>
-      </tr>
-      <tr>
-        <td class="button" ontouchstart='sendButtonInput(undefined, undefined, 0)' ontouchend='sendButtonInput(undefined, undefined, 128)'
-            onmousedown='sendButtonInput(undefined, undefined, 0)' onmouseup='sendButtonInput(undefined, undefined, 128)'>
-          <span class="arrows">&#8678;</span>
-        </td>
-        <td class="button" onmousedown='sendButtonInput(0, 0, 128, 128, 128, 128, 128, 128)' onmouseup='sendButtonInput(0, 0, 128, 128, 128, 128, 128, 128)'>
-          <span class="arrows">&#10539;</span>
-        </td>
-        <td class="button" ontouchstart='sendButtonInput(undefined, undefined, 255)' ontouchend='sendButtonInput(undefined, undefined, 128)'
-            onmousedown='sendButtonInput(undefined, undefined, 255)' onmouseup='sendButtonInput(undefined, undefined, 128)'>
-          <span class="arrows">&#8680;</span>
-        </td>
-      </tr>
-      <tr>
-        <td></td>
-        <td class="button" ontouchstart='sendButtonInput(undefined, undefined, undefined, 0)' ontouchend='sendButtonInput(undefined, undefined, undefined, 128)' 
-            onmousedown='sendButtonInput(undefined, undefined, undefined, 0)' onmouseup='sendButtonInput(undefined, undefined, undefined, 128)'>
-          <span class="arrows">&#8681;</span>
-        </td>
-        <td></td>
-      </tr>
+  <tr>
+    <td></td>
+    <td class="button" ontouchstart = "global_channel_Values.b = 255" ontouchend = "global_channel_Values.b = 128" onmousedown = "global_channel_Values.b = 255" onmouseup = "global_channel_Values.b = 128">
+      <span class="arrows">&#8679;</span>
+    </td>
+    <td></td>
+  </tr>
+  <tr>
+    <td class="button" ontouchstart = "global_channel_Values.a = 0" ontouchend = "global_channel_Values.a = 128" onmousedown = "global_channel_Values.a = 0" onmouseup = "global_channel_Values.a = 128">
+      <span class="arrows">&#8678;</span>
+    </td>
+    <td class="button"'>
+      <span class="arrows">&#10539;</span>
+    </td>
+    <td class="button" ontouchstart = "global_channel_Values.a = 255" ontouchend = "global_channel_Values.a = 128" onmousedown = "global_channel_Values.a = 255" onmouseup = "global_channel_Values.a = 128">
+      <span class="arrows">&#8680;</span>
+    </td>
+  </tr>
+  <tr>
+    <td></td>
+    <td class="button" ontouchstart = "global_channel_Values.b = 0" ontouchend = "global_channel_Values.b = 128" onmousedown = "global_channel_Values.b = 0" onmouseup = "global_channel_Values.b = 128">
+      <span class="arrows">&#8681;</span>
+    </td>
+    <td></td>
+  </tr>
 
-    <tr>
-      <td style="text-align:left;font-size:30px"><b>CH1:</b></td>
+  <tr>
+    <td style="text-align:left;font-size:30px"><b>CH1:</b></td>
+    <td colspan=2>
+      <div class="slidecontainer"><input type="range" min="0" max="255" value="128" class="slider" oninput='global_channel_Values.ch1 = parseInt(value)'></div>
+    </td>
+  </tr>
+<!--
+  <tr>
+    <td style="text-align:left;font-size:30px"><b>CH2:</b></td>
       <td colspan=2>
-       <div class="slidecontainer"><input type="range" min="0" max="255" value="128" class="slider" oninput='sendButtonInput(undefined,undefined,undefined,undefined,value)'></div>
+       <div class="slidecontainer"><input type="range" min="0" max="255" value="128" class="slider" oninput='global_channel_Values.ch2 = parseInt(value)'></div>
       </td>
     </tr>
-<!--    <tr>
-      <td style="text-align:left;font-size:30px"><b>CH2:</b></td>
-      <td colspan=2>
-       <div class="slidecontainer"><input type="range" min="0" max="255" value="128" class="slider" oninput='sendButtonInput(undefined,undefined,undefined,undefined,undefined,value)'></div>
-      </td>
-    </tr>
     <tr>
-        <td style="text-align:left;font-size:30px"><b>CH3:</b></td>
-        <td colspan=2>
-         <div class="slidecontainer"><input type="range" min="0" max="255" value="128" class="slider" oninput='sendButtonInput(undefined,undefined,undefined,undefined,undefined,value)'></div>
-        </td>
-    </tr> 
+      <td style="text-align:left;font-size:30px"><b>CH3:</b></td>
+      <td colspan=2>
+        <div class="slidecontainer"><input type="range" min="0" max="255" value="128" class="slider" oninput='global_channel_Values.ch3 = parseInt(value)'></div>
+      </td>
+  </tr> 
 -->
 <!--
-    <tr>
-        <td class="button" ontouchend='sendButtonInput(undefined,undefined,undefined,undefined,undefined,undefined,undefined,prevValues.ch4 - 5)'
-            onclick='sendButtonInput(undefined,undefined,undefined,undefined,undefined,undefined,undefined,prevValues.ch4 + 5)'>
-          <span class="arrows">&#8678;</span>
-        </td>
-        <td></td>
-        <td class="button" ontouchend='sendButtonInput(undefined,undefined,undefined,undefined,undefined,undefined,undefined,prevValues.ch4 + 5)'
-            onclick='sendButtonInput(undefined,undefined,undefined,undefined,undefined,undefined,undefined,prevValues.ch4 - 5)'>
-          <span class="arrows">&#8680;</span>
-        </td>
-    </tr>
+  <tr>
+    <td class="button" ontouchend='sendButtonInput(undefined,undefined,undefined,undefined,undefined,undefined,undefined,prevValues.ch4 - 5)' onclick='sendButtonInput(undefined,undefined,undefined,undefined,undefined,undefined,undefined,prevValues.ch4 + 5)'>
+      <span class="arrows">&#8678;</span>
+    </td>
+    <td></td>
+    <td class="button" ontouchend='sendButtonInput(undefined,undefined,undefined,undefined,undefined,undefined,undefined,prevValues.ch4 + 5)' onclick='sendButtonInput(undefined,undefined,undefined,undefined,undefined,undefined,undefined,prevValues.ch4 - 5)'>
+      <span class="arrows">&#8680;</span>
+    </td>
+  </tr>
 -->
+<tr>
+  <td colspan=3 class="button" ontouchstart = "ful_scr_req()" onmousedown = "ful_scr_req()">
+    <span class="arrows">Full Screen</span>
+  </td>
+</tr>
   </table>
-  <!--<sapn id="xvalue"></sapn>-->
+  <sapn id="xvalue"></sapn>
 </body>
 
 <script src='jquery.min.js'></script>
 <script type="application/javascript">
+global_channel_Values = {
+  x: 128,
+  y: 128,
+  a: 128,
+  b: 128,
+  ch1: 128,
+  ch2: 128,
+  ch3: 128,
+  ch4: 128,
+};
+
 function gamepad() {
   let mousedown = false;
   let mycanvas = document.getElementById('canvas');
@@ -118,7 +135,6 @@ function gamepad() {
   let SMALL_R = 20;
   let BIG_R = 128;
   let Offset_ = 150;
-  let output = {x: 128, y: 128};  // Initialize with neutral positions
 
   function init() {
     joystickdraw(Offset_, Offset_);
@@ -140,11 +156,8 @@ function gamepad() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.save();
     let pos = getXY(posx - Offset_, posy - Offset_);
-    output.x = parseInt(pos.x);
-    output.y = parseInt(pos.y);
-    //sendButtonInput(output.x + 128, output.y + 128);
-    //$('#xvalue').text(output.x+","+output.y);
-            
+    global_channel_Values.x = parseInt(pos.x) + 128; // Output X
+    global_channel_Values.y = parseInt(pos.y) + 128; // Output Y
     ctx.translate(pos.x - SMALL_R + Offset_, pos.y - SMALL_R + Offset_);
     ctx.beginPath();
     ctx.arc(SMALL_R, SMALL_R, SMALL_R, 0, 2 * Math.PI);
@@ -203,85 +216,83 @@ function gamepad() {
   mycanvas.ontouchmove = touching_event;
   mycanvas.ontouchend = touchstop_event;
 
-  function continuousDataSend() {
-      sendButtonInput(output.x + 128, output.y + 128);
-  }
-
-  setInterval(continuousDataSend, 100);
-
   init();
 }
 
-    //gamepad();
-    //$("#url").attr("value",webSocketCarInputUrl);
-    //var btnconnect = document.getElementById('connect');
-    //var btndisconnect = document.getElementById('disconnect');
-var webSocketCarInputUrl = "ws:\/\/" + window.location.hostname + "/CarInput";
-
 function initCarInputWebSocket() {
-    websocketCarInput = new WebSocket(webSocketCarInputUrl);
-    websocketCarInput.onopen = function(event){gamepad();};
-    websocketCarInput.onclose = function(event){alert("Disconnect"); setTimeout(initCarInputWebSocket, 1);};
-    websocketCarInput.onmessage = function(event){};        
+  websocketCarInput = new WebSocket("ws:\/\/" + window.location.hostname + "/CarInput");
+  websocketCarInput.onopen = function(event){gamepad(); setInterval(sendButtonInput, 100);};
+  websocketCarInput.onclose = function(event){
+    if (confirm("Lost Connection! Retry? (or go into debug)")) {
+      setTimeout(initCarInputWebSocket, 2);
+    } else {
+      gamepad();
+      setInterval(debugmode, 100);
+    }
+  };
+  websocketCarInput.onmessage = function(event){};        
 }
 
-// Initialize the previous values as binary data
-const prevValues = {
-  x: new Uint8Array([0]),
-  y: new Uint8Array([0]),
-  a: new Uint8Array([128]),
-  b: new Uint8Array([128]),
-  ch1: new Uint8Array([128]),
-  ch2: new Uint8Array([128]),
-  ch3: new Uint8Array([128]),
-  ch4: new Uint8Array([128]),
-};
+function debugmode(){
+  $('#xvalue').text(global_channel_Values.x + "," + global_channel_Values.y);
+  console.log(global_channel_Values);
+}
 
-function sendButtonInput(x = undefined, y = undefined, a = undefined, b = undefined, ch1 = undefined, ch2 = undefined, ch3 = undefined, ch4 = undefined) {
-  // Create binary data for each input, or use the previous value if not provided
-  const data = {
-    x: x !== undefined ? new Uint8Array([x]) : prevValues.x,
-    y: y !== undefined ? new Uint8Array([y]) : prevValues.y,
-    a: a !== undefined ? new Uint8Array([a]) : prevValues.a,
-    b: b !== undefined ? new Uint8Array([b]) : prevValues.b,
-    ch1: ch1 !== undefined ? new Uint8Array([ch1]) : prevValues.ch1,
-    //ch2: ch2 !== undefined ? new Uint8Array([ch2]) : prevValues.ch2,
-    //ch3: ch3 !== undefined ? new Uint8Array([ch3]) : prevValues.ch3,
-    //ch4: ch4 !== undefined ? new Uint8Array([ch4]) : prevValues.ch4,
-  };
-
-  // Update the previous values
-  Object.assign(prevValues, data);
-
+function sendButtonInput() {
   // Combine the binary data into a single ArrayBuffer
   let totalLength = 0;
-  for (const key in data) {
-    totalLength += data[key].byteLength;
+  for (const key in global_channel_Values) {
+    totalLength += global_channel_Values[key].byteLength;
   }
   const binaryData = new Uint8Array(totalLength);
   let offset = 0;
-  for (const key in data) {
-    binaryData.set(data[key], offset);
-    offset += data[key].byteLength;
+  for (const key in global_channel_Values) {
+    binaryData.set(global_channel_Values[key], offset);
+    offset += global_channel_Values[key].byteLength;
   }
 
   // Send the binary data through the WebSocket
   websocketCarInput.send(binaryData.buffer);
 }
 
-    
-window.onload = initCarInputWebSocket;
-var mainTable = document.getElementById("mainTable");
-
 function preventDefaultHandler(event) {
   event.preventDefault();
 }
 
-// Add a touchend event listener
-mainTable.addEventListener("touchend", preventDefaultHandler);
+function ful_scr_req() {
+  document.documentElement.webkitRequestFullScreen();
+}
 
-// Add a click event listener
-mainTable.addEventListener("click", preventDefaultHandler);
+window.onload = initCarInputWebSocket;
+mainTable = document.getElementById("mainTable");
+mainTable.addEventListener("touchend", preventDefaultHandler); // Add a touchend event listener
+mainTable.addEventListener("click", preventDefaultHandler); // Add a click event listener
+</script>
+
+<script>
+  function changeOrientation($print){
+    var width = document.documentElement.clientWidth;
+    var height =  document.documentElement.clientHeight;
+    if(width > height){ // vel
+      $print.width(width);
+      $print.height(height);
+      $print.css('top',  0 );
+      $print.css('left',  0 );
+      $print.css('transform' , 'none');
+      $print.css('transform-origin' , '50% 50%');
+    }else{ // hoz
+      $print.width(height);
+      $print.height(width);
+      $print.css('top',  (height-width)/2 );
+      $print.css('left',  0-(height-width)/2 );
+      $print.css('transform' , 'rotate(90deg)');
+      $print.css('transform-origin' , '50% 50%');
+    }
+  }
+
+  changeOrientation($('body'));
+  window.addEventListener("onorientationchange", function() {changeOrientation($('body'));});
+  window.addEventListener("resize", function() {changeOrientation($('body'));});
 </script>
 </html>
 )HTMLHOMEPAGE";
