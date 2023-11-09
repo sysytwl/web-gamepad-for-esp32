@@ -1,5 +1,12 @@
 # UoBRobotics_sumo_robots WebSocket
 
+## V3.2.6 changes:
+- Web:
+  - add full-screen function
+  - scale fixed
+- find the bug: the joystick and button can't work simultaneously
+- find the bug: Joystick offset error
+
 ## V3.2.5 changes:
 - web:
   - better logic, reduced resource
