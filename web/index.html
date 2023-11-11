@@ -41,6 +41,9 @@
       overflow: hidden;
       position: relative;
     }
+    @media screen and (max-width: 455px) {
+
+    }
 	</style>
 </head>
 <body align="center">
@@ -227,7 +230,7 @@ function initCarInputWebSocket() {
     } else {
       gamepad();
       setInterval(debugmode, 100);
-    }
+    };
   };
   websocketCarInput.onmessage = function(event){};        
 }
@@ -278,24 +281,25 @@ mainTable.addEventListener("click", preventDefaultHandler); // Add a click event
     var width = document.documentElement.clientWidth;
     var height =  document.documentElement.clientHeight;
     if(width > height){ // vel
-      $print.width(width);
-      $print.height(height);
-      $print.css('top',  0 );
-      $print.css('left',  0 );
-      $print.css('transform' , 'none');
-      $print.css('transform-origin' , '50% 50%');
+      //$print.width(width);
+      //$print.height(height);
+      //$print.css('top',  0 );
+      //$print.css('left',  0 );
+      //$print.css('transform' , 'none');
+      //$print.css('transform-origin' , '50% 50%');
     }else{ // hoz
-      $print.width(height);
-      $print.height(width);
-      $print.css('top',  (height-width)/2 );
-      $print.css('left',  0-(height-width)/2 );
-      $print.css('transform' , 'rotate(90deg)');
-      $print.css('transform-origin' , '50% 50%');
+      alert("plz unlock rotation!");
+      //$print.width(height);
+      //$print.height(width);
+      //$print.css('top',  (height-width)/2 );
+      //$print.css('left',  0-(height-width)/2 );
+      //$print.css('transform' , 'rotate(90deg)');
+      //$print.css('transform-origin' , '50% 50%');
     }
   }
 
   changeOrientation($('body'));
-  window.addEventListener("onorientationchange", function() {changeOrientation($('body'));});
-  window.addEventListener("resize", function() {changeOrientation($('body'));});
+  //window.addEventListener("onorientationchange", function() {changeOrientation($('body'));});
+  //window.addEventListener("resize", function() {changeOrientation($('body'));});
 </script>
 </html>

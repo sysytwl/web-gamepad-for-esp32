@@ -42,6 +42,9 @@ const char* htmlHomePage PROGMEM = R"HTMLHOMEPAGE(
       overflow: hidden;
       position: relative;
     }
+    @media screen and (max-width: 455px) {
+
+    }
 	</style>
 </head>
 <body align="center">
@@ -279,25 +282,26 @@ mainTable.addEventListener("click", preventDefaultHandler); // Add a click event
     var width = document.documentElement.clientWidth;
     var height =  document.documentElement.clientHeight;
     if(width > height){ // vel
-      $print.width(width);
-      $print.height(height);
-      $print.css('top',  0 );
-      $print.css('left',  0 );
-      $print.css('transform' , 'none');
-      $print.css('transform-origin' , '50% 50%');
+      //$print.width(width);
+      //$print.height(height);
+      //$print.css('top',  0 );
+      //$print.css('left',  0 );
+      //$print.css('transform' , 'none');
+      //$print.css('transform-origin' , '50% 50%');
     }else{ // hoz
-      $print.width(height);
-      $print.height(width);
-      $print.css('top',  (height-width)/2 );
-      $print.css('left',  0-(height-width)/2 );
-      $print.css('transform' , 'rotate(90deg)');
-      $print.css('transform-origin' , '50% 50%');
+      alert("plz unlock rotation!");
+      //$print.width(height);
+      //$print.height(width);
+      //$print.css('top',  (height-width)/2 );
+      //$print.css('left',  0-(height-width)/2 );
+      //$print.css('transform' , 'rotate(90deg)');
+      //$print.css('transform-origin' , '50% 50%');
     }
   }
 
   changeOrientation($('body'));
-  window.addEventListener("onorientationchange", function() {changeOrientation($('body'));});
-  window.addEventListener("resize", function() {changeOrientation($('body'));});
+  //window.addEventListener("onorientationchange", function() {changeOrientation($('body'));});
+  //window.addEventListener("resize", function() {changeOrientation($('body'));});
 </script>
 </html>
 )HTMLHOMEPAGE";
@@ -320,10 +324,10 @@ const char* gamepad PROGMEM = R"GAMEPAD(
     <h1>Gamepad Input Data</h1>
     <div id="gamepadData">
         <p><strong>Selected Gamepad:</strong> <span id="selectedGamepad">None</span></p>
-        <p><strong>Axis X:</strong> <span id="axisX">0</span></p>
-        <p><strong>Axis Y:</strong> <span id="axisY">0</span></p>
-        <p><strong>Button A:</strong> <span id="buttonA">Released</span></p>
-        <p><strong>Button B:</strong> <span id="buttonB">Released</span></p>
+        <p><strong>Axis X:</strong> <span id="axisX">128</span></p>
+        <p><strong>Axis Y:</strong> <span id="axisY">128</span></p>
+        <p><strong>Button A:</strong> <span id="buttonA">128</span></p>
+        <p><strong>Button B:</strong> <span id="buttonB">128</span></p>
         <!-- Add more elements for additional gamepad data as needed -->
     </div>
 
@@ -334,9 +338,18 @@ const char* gamepad PROGMEM = R"GAMEPAD(
     </select>
 
     <!-- Include your JavaScript code for handling gamepad input and updating the display -->
-    <script src="jquery.min.js"></script>
+    <script src="./jquery.min.js"></script>
     <script>
-        var selectedGamepadIndex = -1; // Initialize with no gamepad selected
+        global_channel_Values = {
+            x: 128,
+            y: 128,
+            a: 128,
+            b: 128,
+            ch1: 128,
+            ch2: 128,
+            ch3: 128,
+            ch4: 128,
+        };
         var gamepadSelect = document.getElementById('gamepadSelect');
         var gamepadData = document.getElementById('gamepadData');
 
@@ -356,101 +369,73 @@ const char* gamepad PROGMEM = R"GAMEPAD(
             }
         }
 
-        // Function to handle gamepad selection from the dropdown
-        gamepadSelect.addEventListener('change', function () {
-            selectedGamepadIndex = parseInt(gamepadSelect.value);
-            if (selectedGamepadIndex === -1) {
-                gamepadData.style.display = 'none'; // Hide gamepad data when no gamepad is selected
-            } else {
-                gamepadData.style.display = 'block'; // Show gamepad data when a gamepad is selected
-            }
-        });
-
         // Function to update the display with gamepad input data and send it
         function updateGamepadData() {
+            if(gamepadSelect.value = -1){
+                updateGamepadList();
+            };
             const gamepads = navigator.getGamepads();
-            const gamepad = gamepads[selectedGamepadIndex]; // Use the selected gamepad
+            const gamepad = gamepads[parseInt(gamepadSelect.value)]; // Use the selected gamepad
+
 
             if (gamepad) {
+                // Send gamepad data to the server using sendButtonInput
+                global_channel_Values.x = Math.round((gamepad.axes[0] + 1) * 128), // Normalize axis value to [0, 255]
+                global_channel_Values.y = Math.round((gamepad.axes[1] + 1) * 128), // Normalize axis value to [0, 255]
+                global_channel_Values.a = gamepad.buttons[0].pressed ? 255 : 128, // Button A state
+                global_channel_Values.b = gamepad.buttons[1].pressed ? 255 : 128, // Button B state
+                // Add more gamepad data as needed
+
                 // Update the display with gamepad data
                 document.getElementById('selectedGamepad').textContent = gamepad.id;
-                document.getElementById('axisX').textContent = gamepad.axes[0].toFixed(2);
-                document.getElementById('axisY').textContent = gamepad.axes[1].toFixed(2);
-                document.getElementById('buttonA').textContent = gamepad.buttons[0].pressed ? 'Pressed' : 'Released';
-                document.getElementById('buttonB').textContent = gamepad.buttons[1].pressed ? 'Pressed' : 'Released';
-                // Add more code to update other gamepad data as needed
+                document.getElementById('axisX').textContent = global_channel_Values.x.toFixed(2);
+                document.getElementById('axisY').textContent = global_channel_Values.y.toFixed(2);
+                document.getElementById('buttonA').textContent = global_channel_Values.a;
+                document.getElementById('buttonB').textContent = global_channel_Values.b;
 
-                // Send gamepad data to the server using sendButtonInput
-                sendButtonInput(
-                    Math.round((gamepad.axes[0] + 1) * 128), // Normalize axis value to [0, 255]
-                    Math.round((gamepad.axes[1] + 1) * 128), // Normalize axis value to [0, 255]
-                    gamepad.buttons[0].pressed ? 255 : 128, // Button A state
-                    gamepad.buttons[1].pressed ? 255 : 128, // Button B state
-                    // Add more gamepad data as needed
-                );
+                sendButtonInput();
             }
-
-            // Repeat the function call with a 50ms delay
-            setTimeout(function() {
-                requestAnimationFrame(updateGamepadData);
-            }, 50);
         }
 
-        var webSocketCarInputUrl = "ws:\/\/" + window.location.hostname + "/CarInput";
         function initCarInputWebSocket() {
-            websocketCarInput = new WebSocket(webSocketCarInputUrl);
+            websocketCarInput = new WebSocket("ws:\/\/" + window.location.hostname + "/CarInput");
             websocketCarInput.onopen = function(event){
-                updateGamepadList(); // Initial update of the gamepad list
-                updateGamepadData();
+                setInterval(updateGamepadData, 100);
             };
             websocketCarInput.onclose = function(event){
-                alert("Disconnect");
-                setTimeout(initCarInputWebSocket, 1);
+                if (confirm("Lost Connection! Retry? (or go into debug)")) {
+                    setTimeout(initCarInputWebSocket, 2);
+                } else {
+                    setInterval(debugmode, 100);
+                };
             };
             websocketCarInput.onmessage = function(event){};        
         }
 
-        const prevValues = {
-            x: new Uint8Array([0]),
-            y: new Uint8Array([0]),
-            a: new Uint8Array([128]),
-            b: new Uint8Array([128]),
-            ch1: new Uint8Array([128]),
-            ch2: new Uint8Array([128]),
-            ch3: new Uint8Array([128]),
-            ch4: new Uint8Array([128]),
-        };
-
-        function sendButtonInput(x = undefined, y = undefined, a = undefined, b = undefined, ch1 = undefined, ch2 = undefined, ch3 = undefined, ch4 = undefined) {
-            // Create binary data for each input, or use the previous value if not provided
-            const data = {
-                x: x !== undefined ? new Uint8Array([x]) : prevValues.x,
-                y: y !== undefined ? new Uint8Array([y]) : prevValues.y,
-                a: a !== undefined ? new Uint8Array([a]) : prevValues.a,
-                b: b !== undefined ? new Uint8Array([b]) : prevValues.b,
-                ch1: ch1 !== undefined ? new Uint8Array([ch1]) : prevValues.ch1,
-                //ch2: ch2 !== undefined ? new Uint8Array([ch2]) : prevValues.ch2,
-                //ch3: ch3 !== undefined ? new Uint8Array([ch3]) : prevValues.ch3,
-                //ch4: ch4 !== undefined ? new Uint8Array([ch4]) : prevValues.ch4,
-            };
-
-            // Update the previous values
-            Object.assign(prevValues, data);
-
+        function sendButtonInput() {
             // Combine the binary data into a single ArrayBuffer
-            let totalLength = 0;
-            for (const key in data) {
-                totalLength += data[key].byteLength;
-            }
-            const binaryData = new Uint8Array(totalLength);
+            const binaryData = new Uint8Array(8);
             let offset = 0;
-            for (const key in data) {
-                binaryData.set(data[key], offset);
-                offset += data[key].byteLength;
+            for (const key in global_channel_Values) {
+              binaryData[offset] = global_channel_Values[key];
+              offset ++;
             }
-
             // Send the binary data through the WebSocket
             websocketCarInput.send(binaryData.buffer);
+        }
+
+        function debugmode(){
+            updateGamepadData();
+          
+            // Combine the binary data into a single ArrayBuffer
+            const binaryData = new Uint8Array(8);
+            let offset = 0;
+            for (const key in global_channel_Values) {
+              binaryData[offset] = global_channel_Values[key];
+              //binaryData.set(global_channel_Values[key], offset);
+              offset ++;
+            }
+            console.log(binaryData);
         }
 
         window.onload = initCarInputWebSocket;
