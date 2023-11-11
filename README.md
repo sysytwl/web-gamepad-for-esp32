@@ -1,5 +1,10 @@
 # UoBRobotics_sumo_robots WebSocket
 
+## V3.2.8:
+- web:
+  - gamepad bug fixed
+  - rotation bug fixed
+
 ## V3.2.7 changes:
 - web:
   - better logic, reduced resource usage 
