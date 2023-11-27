@@ -334,7 +334,10 @@ const char* gamepad PROGMEM = R"GAMEPAD(
     <!-- Add a dropdown to manually select the gamepad -->
     <label for="gamepadSelect">Select Gamepad:</label>
     <select id="gamepadSelect">
-        <option value="-1">None</option>
+        <option value="0">1</option>
+        <option value="1">2</option>
+        <option value="2">3</option>
+        <option value="3">4</option>
     </select>
 
     <!-- Include your JavaScript code for handling gamepad input and updating the display -->
@@ -371,9 +374,9 @@ const char* gamepad PROGMEM = R"GAMEPAD(
 
         // Function to update the display with gamepad input data and send it
         function updateGamepadData() {
-            if(gamepadSelect.value = -1){
-                updateGamepadList();
-            };
+            //if(gamepadSelect.value = -1){
+            //    updateGamepadList();
+            //};
             const gamepads = navigator.getGamepads();
             const gamepad = gamepads[parseInt(gamepadSelect.value)]; // Use the selected gamepad
 
@@ -435,7 +438,7 @@ const char* gamepad PROGMEM = R"GAMEPAD(
               //binaryData.set(global_channel_Values[key], offset);
               offset ++;
             }
-            console.log(binaryData);
+            //console.log(binaryData);
         }
 
         window.onload = initCarInputWebSocket;
